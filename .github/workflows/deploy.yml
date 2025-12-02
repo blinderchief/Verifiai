@@ -1,0 +1,143 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'testnet'
+        type: choice
+        options:
+          - testnet
+          - mainnet
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '8'
+
+jobs:
+  deploy-contracts:
+    name: Deploy Move Contracts
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'testnet' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Aptos CLI
+        run: |
+          curl -fsSL "https://aptos.dev/scripts/install_cli.py" | python3
+
+      - name: Configure Aptos Profile
+        run: |
+          mkdir -p ~/.aptos
+          echo '${{ secrets.APTOS_CONFIG }}' > ~/.aptos/config.yaml
+
+      - name: Compile Move modules
+        working-directory: contracts
+        run: aptos move compile
+
+      - name: Deploy to ${{ github.event.inputs.environment || 'testnet' }}
+        working-directory: contracts
+        run: |
+          aptos move publish \
+            --profile ${{ github.event.inputs.environment || 'testnet' }} \
+            --assume-yes
+
+      - name: Output deployment info
+        run: |
+          echo "✅ Contracts deployed to ${{ github.event.inputs.environment || 'testnet' }}"
+
+  deploy-api:
+    name: Deploy API
+    runs-on: ubuntu-latest
+    needs: deploy-contracts
+    environment: ${{ github.event.inputs.environment || 'testnet' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build API
+        run: pnpm --filter @verifiai/api build
+
+      - name: Deploy to Railway
+        uses: railwayapp/cli-action@v1
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          command: |
+            railway up --service api --environment ${{ github.event.inputs.environment || 'testnet' }}
+
+  deploy-dashboard:
+    name: Deploy Dashboard
+    runs-on: ubuntu-latest
+    needs: deploy-api
+    environment: ${{ github.event.inputs.environment || 'testnet' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Dashboard
+        run: pnpm --filter @verifiai/dashboard build
+        env:
+          VITE_API_URL: ${{ vars.API_URL }}
+          VITE_APTOS_NETWORK: ${{ github.event.inputs.environment || 'testnet' }}
+          VITE_SHELBY_API_KEY: ${{ secrets.SHELBY_API_KEY }}
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: apps/dashboard
+          vercel-args: '--prod'
+
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: [deploy-contracts, deploy-api, deploy-dashboard]
+    if: always()
+    steps:
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1
+        if: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: 'VerifiAI Protocol Deployment'
+          description: |
+            Environment: ${{ github.event.inputs.environment || 'testnet' }}
+            Contracts: ${{ needs.deploy-contracts.result }}
+            API: ${{ needs.deploy-api.result }}
+            Dashboard: ${{ needs.deploy-dashboard.result }}
+          color: ${{ needs.deploy-dashboard.result == 'success' && '0x00ff00' || '0xff0000' }}

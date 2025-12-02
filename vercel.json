@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build --workspace=@verifiai/dashboard",
+  "outputDirectory": "apps/dashboard/dist",
+  "devCommand": "npm run dev --workspace=@verifiai/dashboard",
+  "installCommand": "npm install",
+  "framework": null
+}

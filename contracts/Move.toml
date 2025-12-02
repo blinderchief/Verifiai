@@ -1,0 +1,16 @@
+[package]
+name = "VerifiAI"
+version = "0.1.0"
+authors = ["VerifiAI Team"]
+
+[addresses]
+verifiai = "_"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-framework", rev = "mainnet" }
+AptosStdlib = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-stdlib", rev = "mainnet" }
+
+[dev-addresses]
+verifiai = "0xCAFE"
+
+[dev-dependencies]

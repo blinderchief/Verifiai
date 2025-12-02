@@ -1,0 +1,84 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.js.map
+*.d.ts
+!packages/*/src/**/*.d.ts
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Testing
+*.test.ts.snap
+
+# Turbo
+.turbo/
+
+# Aptos
+.aptos/
+build/
+storage/
+
+# Move
+move_packages/
+
+# Docker
+.docker/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Secrets (NEVER commit)
+*.pem
+*.key
+*.p12
+secrets/
+
+# Proof artifacts (large files)
+*.ptau
+*.zkey
+*.wasm
+circuits/pot/
+circuits/build/
+
+# Models (large files)
+*.onnx
+*.pt
+*.pth
+*.h5
+models/
+
+# Editor configs (optional, can be removed)
+*.code-workspace

@@ -1,0 +1,12 @@
+{
+  "protocol": "groth16",
+  "curve": "bn128",
+  "version": "1.0.0",
+  "note": "This is a placeholder. Generate real keys using snarkjs or circom for production.",
+  "proving_key": {
+    "alpha": "placeholder_alpha_point",
+    "beta": "placeholder_beta_point",
+    "delta": "placeholder_delta_point",
+    "ic": []
+  }
+}

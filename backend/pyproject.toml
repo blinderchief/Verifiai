@@ -1,0 +1,102 @@
+[project]
+name = "verifiai-backend"
+version = "1.0.0"
+description = "VerifiAI Protocol - Production Backend API"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "VerifiAI Team", email = "team@verifiai.io" }
+]
+keywords = ["ai", "verification", "blockchain", "aptos", "zkp"]
+
+dependencies = [
+    # FastAPI & Web
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "python-multipart>=0.0.6",
+    "httpx>=0.26.0",
+    "websockets>=12.0",
+    
+    # Database
+    "sqlalchemy[asyncio]>=2.0.25",
+    "alembic>=1.13.1",
+    "asyncpg>=0.29.0",
+    "greenlet>=3.0.0",
+    
+    # Pydantic & Validation
+    "pydantic>=2.5.3",
+    "pydantic-settings>=2.1.0",
+    "email-validator>=2.1.0",
+    
+    # Authentication
+    "pyjwt[crypto]>=2.8.0",
+    "passlib[bcrypt]>=1.7.4",
+    
+    # Redis & Caching
+    "redis>=5.0.1",
+    
+    # Background Tasks
+    "celery>=5.3.6",
+    
+    # Blockchain - Aptos
+    "aptos-sdk>=0.8.0",
+    "pynacl>=1.5.0",
+    
+    # Cryptography & ZKP
+    "cryptography>=41.0.7",
+    "numpy>=1.26.3",
+    "scipy>=1.12.0",
+    
+    # Storage
+    "boto3>=1.34.14",
+    "aiofiles>=23.2.1",
+    
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "structlog>=24.1.0",
+    "tenacity>=8.2.3",
+    
+    # Monitoring
+    "sentry-sdk[fastapi]>=1.39.1",
+    "prometheus-client>=0.19.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.4",
+    "pytest-asyncio>=0.23.3",
+    "pytest-cov>=4.1.0",
+    "httpx>=0.26.0",
+    "black>=24.0.0",
+    "ruff>=0.1.11",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+    "faker>=22.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
