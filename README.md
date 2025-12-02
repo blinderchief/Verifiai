@@ -6,6 +6,166 @@ VerifiAI is a decentralized platform that generates **zero-knowledge proofs** fo
 
 ---
 
+## 🧠 What is VerifiAI? (Simple Explanation)
+
+Imagine you have **smart AI robots** (called agents) that can automatically pay invoices, trade real estate tokens, or split music royalties on the blockchain.
+
+**The Problem:** How do you PROVE that the AI really did the math correctly and didn't cheat or make a mistake?
+
+**The Solution:** VerifiAI creates a tamper-proof "receipt" (a cryptographic proof) for every AI decision. Aptos blockchain verifies that receipt in less than 1 second. No trust needed - just math.
+
+### How It Works (Step by Step)
+
+```
+1. AI Agent receives a task
+   └── Example: "Pay this $50,000 invoice only if oil price > $80"
+
+2. AI Brain processes the data
+   └── Fetches live prices, runs the model, decides: "Yes, pay it"
+
+3. Proof Maker creates a tiny receipt (~200 bytes)
+   └── Mathematical proof saying "I did this correctly"
+   └── Doesn't reveal your secret data
+
+4. Send proof to Aptos blockchain
+   └── Takes < 1 second, costs < 1 cent
+
+5. Smart Contract verifies the proof
+   └── ✅ Valid → Money moves automatically
+   └── ❌ Invalid → Transaction rejected
+
+6. Everything recorded forever on-chain
+   └── Provable, transparent, immutable
+```
+
+---
+
+## 🔧 Core Components Explained
+
+### 🤖 AI Agents
+**What:** Autonomous programs that run AI inference tasks.
+
+**Simple Terms:** These are your AI workers. Each agent has specific skills (like analyzing sentiment, checking prices, or detecting fraud). They track their success rate and can work alone or in teams.
+
+**Example:** An agent that monitors stock prices and automatically executes trades when conditions are met.
+
+---
+
+### 🐝 Swarms
+**What:** Groups of AI agents working together on complex tasks.
+
+**Simple Terms:** One AI might not be enough for big jobs. A Swarm combines multiple specialized agents - one for sentiment analysis, one for technical analysis, one for risk assessment. They coordinate automatically and reach consensus together.
+
+**Example:** Analyzing a $500K real estate deal requires: price prediction agent + market trend agent + risk assessment agent = Swarm decision.
+
+---
+
+### 🔐 Zero-Knowledge Proofs
+**What:** Cryptographic receipts that prove AI did calculations correctly WITHOUT revealing the secret data.
+
+**Simple Terms:** It's like a "lie detector" for AI. The proof says "I computed this correctly" but doesn't show your private information (prices, personal data, business secrets).
+
+**How we do it:**
+| Algorithm | Best For | Speed |
+|-----------|----------|-------|
+| **Groth16** | Fast verification | ~0.3 sec |
+| **Bulletproofs** | No trusted setup | ~1 sec |
+| **EZKL** | ML/AI specific proofs | ~8 sec |
+
+**Example:** Prove you're over 18 without revealing your actual birthdate.
+
+---
+
+### 💰 Settlements
+**What:** Multi-party transactions that only execute when proofs are valid.
+
+**Simple Terms:** Imagine selling a $500K house using AI. The AI determines the fair price. Both buyer and seller agree. The sale ONLY goes through when the computer math proves everything is correct. No banks or lawyers needed.
+
+**Example:** 
+```
+Buyer deposits $500K → AI verifies price is fair → 
+Proof submitted → Smart contract checks proof → 
+✅ Valid → Money goes to seller, deed goes to buyer
+```
+
+---
+
+### 📦 AI Models
+**What:** Registered AI models with on-chain verification.
+
+**Simple Terms:** When you upload an AI model, we create a unique fingerprint (hash) and save it on Aptos. Anyone can verify that a proof came from YOUR exact model - and that nobody tampered with it.
+
+**Example:** Upload your fraud detection model → Get unique ID → All proofs reference this ID → Auditors can verify authenticity.
+
+---
+
+### 🗄️ Shelby (Decentralized Storage)
+**What:** Shared memory for AI agents to store evidence, logs, and proofs.
+
+**Simple Terms:** Like a shared Google Drive on blockchain. Agents store tiny pieces of evidence (hashes, logs, old proofs) so the whole team can access them instantly and cheaply.
+
+**Example:** "We already verified this invoice last week" - agents check Shelby instead of redoing work.
+
+---
+
+### 🎮 Photon (Rewards & Easy Login)
+**What:** User-friendly wallet creation and reward system.
+
+**Simple Terms:** 
+- **Easy Login:** No 12-word seed phrases. Just "Login with Google" → instant wallet in 5 seconds.
+- **Rewards:** Earn PAT tokens every time you use VerifiAI correctly. Gamification that makes people want to participate.
+
+**Example:** Sign in with email → Create agent → Generate proof → Earn 10 PAT tokens.
+
+---
+
+## 📊 Complete Flow Example
+
+**Scenario:** Automated invoice payment based on oil prices
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Merchant uploads invoice ($50,000)                       │
+│    └── AI Agent wakes up                                    │
+├─────────────────────────────────────────────────────────────┤
+│ 2. Agent fetches live oil price (private data)              │
+│    └── Price = $85 (above $80 threshold)                    │
+├─────────────────────────────────────────────────────────────┤
+│ 3. Agent's AI brain decides: "Condition met → Pay"          │
+├─────────────────────────────────────────────────────────────┤
+│ 4. EZKL creates 200-byte proof in ~8 seconds                │
+│    └── "I verified correctly, here's the math"              │
+├─────────────────────────────────────────────────────────────┤
+│ 5. Agent sends proof to Aptos (via Photon wallet)           │
+│    └── Cost: < $0.01                                        │
+├─────────────────────────────────────────────────────────────┤
+│ 6. VerifiAI smart contract verifies in 0.3 seconds          │
+│    └── ✅ Proof valid!                                      │
+├─────────────────────────────────────────────────────────────┤
+│ 7. Money auto-transfers: Buyer → Merchant                   │
+├─────────────────────────────────────────────────────────────┤
+│ 8. Proof + result stored forever (Aptos + Shelby)           │
+├─────────────────────────────────────────────────────────────┤
+│ 9. Both users earn PAT reward tokens via Photon             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🗂️ Component Summary
+
+| Component | Nickname | What It Does | Why We Need It |
+|-----------|----------|--------------|----------------|
+| **AI Model** | The Brain | Does the thinking (price check, fraud detection) | Makes smart decisions |
+| **EZKL + Groth16** | The Lie Detector | Creates "I did it correctly" receipt | Proves the brain didn't cheat |
+| **Aptos Blockchain** | Super Fast Judge | Checks receipt in <1 sec, records everything | Makes it official & permanent |
+| **Move Contracts** | The Rule Book | Code that says "only accept valid proofs" | The referee that never sleeps |
+| **Shelby** | Shared Memory | Cheap storage for logs and proofs | Lets agents remember together |
+| **Photon** | Magic Login | Email login + reward tokens | Makes normal people use it |
+| **Frontend/SDK** | Remote Control | Buttons and tools for humans | The dashboard you click |
+
+---
+
 ## Table of Contents
 
 - [Features](#features)
